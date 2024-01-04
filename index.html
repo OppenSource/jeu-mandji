@@ -12,7 +12,10 @@
     <div class="container">
         <div id="board"></div>
         <div id="score" class="text-sm"></div>
-        <button id="restartButton" onclick="restartGame()" class="btn btn-success mt-2">Recommencer</button>
+        <form method="post" action="#">
+            <button id="restartButton" type="submit" onclick="restartGame()" class="btn btn-success mt-2 mb-3">Recommencer</button>
+            
+        </form>
     </div>
     <script src="script.js"></script>
 </body>

@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     let board = document.getElementById('board');
     let scoreElement = document.getElementById('score');
     let currentPlayer = 0;
-    let boardArray = Array.from({ length: 7 }, () => Array(7).fill(''));
+    let boardArray = Array.from({ length: 8 }, () => Array(8).fill(''));
     let playerNames = ['', '']; // Noms des joueurs
 
     initializePlayers();
@@ -15,23 +15,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function restartGame() {
-        // Réinitialise le tableau et le joueur courant
-        boardArray = Array.from({ length: 7 }, () => Array(7).fill(''));
-        currentPlayer = 0;
-
-        // Réinitialise le tableau visuel
-        updateBoard();
+        location.replace(location.href);
     }
 
     function initializeBoard() {
         // Ajoute deux cases de chaque joueur au centre
-        boardArray[4][4] = 'Black';
-        boardArray[4][3] = 'Black';
-        boardArray[3][3] = 'White';
-        boardArray[3][4] = 'White';
+        boardArray[3][3] = 'Black';
+        boardArray[3][4] = 'Black';
+        boardArray[4][3] = 'White';
+        boardArray[4][4] = 'White';
 
-        for (let row = 0; row < 7; row++) {
-            for (let col = 0; col < 7; col++) {
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
                 let cell = document.createElement('div');
                 cell.classList.add('cell');
                 cell.dataset.row = row;
@@ -45,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function onCellClick(row, col) {
-        if (boardArray[row][col] === '') {
+        if (boardArray[row][col] === '' && isAdjacentCellSelected(row, col) && isDirectlyConnected(row, col)) {
             boardArray[row][col] = currentPlayer === 0 ? 'Black' : 'White';
             currentPlayer = 1 - currentPlayer; // Switch player
             updateBoard();
@@ -57,7 +52,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 showBootstrapAlert("Match nul!", 'warning');
                 restartGame();
             }
+        } else {
+            showBootstrapAlert("Erreur : action impossible", 'danger');
         }
+    }
+
+    function isAdjacentCellSelected(row, col) {
+        // Vérifie si une cellule adjacente a déjà été sélectionnée
+        for (let i = row - 1; i <= row + 1; i++) {
+            for (let j = col - 1; j <= col + 1; j++) {
+                if (i >= 0 && i < 8 && j >= 0 && j < 8 && !(i === row && j === col) && boardArray[i][j] !== '') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function isDirectlyConnected(row, col) {
+        // Vérifie si la cellule est directement connectée à une cellule sélectionnée
+        for (let i = row - 1; i <= row + 1; i++) {
+            for (let j = col - 1; j <= col + 1; j++) {
+                if (i >= 0 && i < 8 && j >= 0 && j < 8 && !(i === row && j === col) && boardArray[i][j] !== '' && isCellConnected(row, col, i, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function isCellConnected(row1, col1, row2, col2) {
+        // Vérifie si deux cellules sont directement connectées
+        return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
     }
 
     function updateBoard() {
@@ -91,8 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkLinesForWinner(board) {
-        for (let row = 0; row < 7; row++) {
-            if (board[row][0] !== '' && board[row][0] === board[row][1] && board[row][0] === board[row][2] && board[row][0] === board[row][3] && board[row][0] === board[row][4] && board[row][0] === board[row][5] && board[row][0] === board[row][6]) {
+        for (let row = 0; row < 8; row++) {
+            if (board[row][0] !== '' && board[row][0] === board[row][1] && board[row][0] === board[row][2] && board[row][0] === board[row][3] && board[row][0] === board[row][4] && board[row][0] === board[row][5] && board[row][0] === board[row][6] && board[row][0] === board[row][7]) {
                 return true;
             }
         }
@@ -100,8 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkColumnsForWinner(board) {
-        for (let col = 0; col < 7; col++) {
-            if (board[0][col] !== '' && board[0][col] === board[1][col] && board[0][col] === board[2][col] && board[0][col] === board[3][col] && board[0][col] === board[4][col] && board[0][col] === board[5][col] && board[0][col] === board[6][col]) {
+        for (let col = 0; col < 8; col++) {
+            if (board[0][col] !== '' && board[0][col] === board[1][col] && board[0][col] === board[2][col] && board[0][col] === board[3][col] && board[0][col] === board[4][col] && board[0][col] === board[5][col] && board[0][col] === board[6][col] && board[0][col] === board[7][col]) {
                 return true;
             }
         }
@@ -109,10 +135,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkDiagonalsForWinner(board) {
-        if (board[0][0] !== '' && board[0][0] === board[1][1] && board[0][0] === board[2][2] && board[0][0] === board[3][3] && board[0][0] === board[4][4] && board[0][0] === board[5][5] && board[0][0] === board[6][6]) {
+        if (board[0][0] !== '' && board[0][0] === board[1][1] && board[0][0] === board[2][2] && board[0][0] === board[3][3] && board[0][0] === board[4][4] && board[0][0] === board[5][5] && board[0][0] === board[6][6] && board[0][0] === board[7][7]) {
             return true;
         }
-        if (board[0][6] !== '' && board[0][6] === board[1][5] && board[0][6] === board[2][4] && board[0][6] === board[3][3] && board[0][6] === board[4][2] && board[0][6] === board[5][1] && board[0][6] === board[6][0]) {
+        if (board[0][7] !== '' && board[0][7] === board[1][6] && board[0][7] === board[2][5] && board[0][7] === board[3][4] && board[0][7] === board[4][3] && board[0][7] === board[5][2] && board[0][7] === board[6][1] && board[0][7] === board[7][0]) {
             return true;
         }
         return false;
@@ -120,12 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function isBoardFull() {
         return boardArray.flat().every(cell => cell !== '');
-    }
-
-    function restartGame() {
-        boardArray = Array.from({ length: 7 }, () => Array(7).fill(''));
-        currentPlayer = 0;
-        updateBoard();
     }
 
     function showBootstrapAlert(message, type) {
@@ -136,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alertElement.innerHTML = `
         <strong>${message}</strong>
         `;
-        
+
         // Append the alert to the container
         let container = document.querySelector('.container');
         container.appendChild(alertElement);
