@@ -21,9 +21,10 @@ body {
     grid-template-rows: repeat(7, 1fr);
     gap: 2px;
     place-content: center;
-    background-color: #fff;
+    background-color: #eee;
     border: 4px solid #000;
     border-radius: 10px;
+    color: transparent;
 }
 
 .cell {
@@ -35,16 +36,19 @@ body {
     place-content: center;
     font-size: 18px;
     cursor: pointer;
+    color: transparent;
 }
 
 .cell.black {
     background-color: #000;
     color: #fff;
+    color: transparent;
 }
 
 .cell.white {
     background-color: #fff;
     color: #000;
+    color: transparent;
 }
 
 #score {

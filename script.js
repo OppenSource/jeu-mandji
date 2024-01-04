@@ -14,7 +14,22 @@ document.addEventListener('DOMContentLoaded', function() {
         updateScore(); // Mettre à jour les noms des joueurs dès le début
     }
 
+    function restartGame() {
+        // Réinitialise le tableau et le joueur courant
+        boardArray = Array.from({ length: 7 }, () => Array(7).fill(''));
+        currentPlayer = 0;
+
+        // Réinitialise le tableau visuel
+        updateBoard();
+    }
+
     function initializeBoard() {
+        // Ajoute deux cases de chaque joueur au centre
+        boardArray[4][4] = 'Black';
+        boardArray[4][3] = 'Black';
+        boardArray[3][3] = 'White';
+        boardArray[3][4] = 'White';
+
         for (let row = 0; row < 7; row++) {
             for (let col = 0; col < 7; col++) {
                 let cell = document.createElement('div');
@@ -119,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alertElement.classList.add('alert', `alert-${type}`);
         alertElement.role = 'alert';
         alertElement.innerHTML = `
-            <strong>${message}</strong>
+        <strong>${message}</strong>
         `;
         
         // Append the alert to the container
